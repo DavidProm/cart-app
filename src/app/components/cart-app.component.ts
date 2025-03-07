@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { Product } from '../models/product';
 import { CatalogComponent } from './catalog/catalog.component';
-import { CartComponent } from './cart/cart.component';
 import { CartItem } from '../models/cartItems';
 import { NavbarComponent } from './navbar/navbar.component';
+import { CartModalComponent } from './cart-modal/cart-modal.component';
 
 @Component({
   selector: 'cart-app',
-  imports: [CatalogComponent, CartComponent, NavbarComponent],
+  imports: [CatalogComponent, CartModalComponent, NavbarComponent],
   templateUrl: './cart-app.component.html'
 })
 export class CartAppComponent implements OnInit {
@@ -17,7 +17,7 @@ export class CartAppComponent implements OnInit {
 
   items: CartItem[] = [];
 
-  total: number = 0;
+  // total: number = 0;
 
   showCart: boolean = false;
 
@@ -26,7 +26,7 @@ export class CartAppComponent implements OnInit {
   ngOnInit(): void {
     this.products = this.service.findAll();
     this.items = JSON.parse(sessionStorage.getItem('cart')!) || [];
-    this.calculateTotal();
+    // this.calculateTotal();
   }
 
   onAddcart(product: Product): void {
@@ -44,25 +44,28 @@ export class CartAppComponent implements OnInit {
     } else {
       this.items = [... this.items, { product: { ...product }, quantity: 1 }]
     }
-    this.calculateTotal();
-    this.saveSession();
+    // this.calculateTotal();
+    // this.saveSession();
   }
 
   onDeleteCart(id: number): void {
     this.items = this.items.filter(item => item.product.id !== id); //filter es el metodo para eliminar o filtrar
-    this.calculateTotal();
-    this.saveSession();
+    if(this.items.length == 0){
+      sessionStorage.removeItem('cart');
+    }
+    // this.calculateTotal();
+    // this.saveSession();
   }
 
-  calculateTotal(): void {
-    this.total = this.items.reduce((accumalator, item) => accumalator + item.quantity * item.product.price, 0);
-  }
+  // calculateTotal(): void {
+  //   this.total = this.items.reduce((accumalator, item) => accumalator + item.quantity * item.product.price, 0);
+  // }
 
-  saveSession(): void {
-    sessionStorage.setItem('cart', JSON.stringify(this.items)); //JSON.stringity convierte un objeto a texto como
-  }
+  // saveSession(): void {
+  //   sessionStorage.setItem('cart', JSON.stringify(this.items)); //JSON.stringity convierte un objeto a texto como
+  // }
 
-  openCart(): void {
+  openCloseCart(): void {
     this.showCart = !this.showCart;
   }
 }
