@@ -11,6 +11,4 @@ export class NavbarComponent {
 
   @Input() items: CartItem[] = [];
 
-  @Input() total: number = 0;
-
 }
