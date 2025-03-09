@@ -30,6 +30,7 @@ export class CartAppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadSession();
     this.onDeleteCart();
     this.onAddcart();
   }
@@ -68,7 +69,7 @@ export class CartAppComponent implements OnInit {
           this.store.dispatch(total());
 
           this.router.navigate(['/cart']);
-          
+
           Swal.fire({
             title: "Eliminado!",
             text: "Se ha eliminado el producto",
@@ -83,4 +84,11 @@ export class CartAppComponent implements OnInit {
     sessionStorage.setItem('cart', JSON.stringify(this.items)); //JSON.stringity convierte un objeto a texto como
   }
 
+  loadSession(): void {
+    const storedCart = sessionStorage.getItem('cart');
+    if (storedCart) {
+      this.items = JSON.parse(storedCart); // Convertir el texto a array de productos
+    };
+    this.store.dispatch(total()); // Calcular el total después de restaurar los productos
+  }
 }
